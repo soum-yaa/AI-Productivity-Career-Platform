@@ -1,23 +1,120 @@
-# AI Productivity & Career Management Platform
+# PrepTrack AI
 
-Production-oriented MERN stack boilerplate: **React (Vite) + Tailwind** client and **Express + MongoDB (Mongoose)** API, with JWT-oriented auth structure, CORS, centralized errors, and a scalable folder layout.
+AI-powered Productivity & Career Management Platform built using the MERN Stack.
 
-## Prerequisites
+PrepTrack AI helps students and job seekers organize their productivity, manage career goals, track preparation progress, and leverage AI-powered assistance for placement and career growth.
 
-- [Node.js](https://nodejs.org/) 18+ (LTS recommended)
-- [MongoDB](https://www.mongodb.com/) (local or Atlas)
+---
 
-## Quick start
+## 🚀 Features
 
-### 1. Install dependencies
+### Authentication & Security
 
-From the repository root:
+* User Registration
+* User Login
+* JWT Authentication
+* Protected Routes
+* Secure Password Hashing
 
-```bash
-npm run install:all
+### Task Management
+
+* Create Tasks
+* Edit Tasks
+* Delete Tasks
+* Task Priorities (Low, Medium, High)
+* Task Status Tracking (Todo, In Progress, Completed)
+* Due Dates
+* Search Tasks
+* Filter by Priority and Status
+
+### Dashboard
+
+* Personalized Dashboard
+* Responsive Layout
+* Dark Mode Support
+* Sidebar Navigation
+
+### Database
+
+* MongoDB Atlas Integration
+* User-specific Task Storage
+* Secure Data Access
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* React.js
+* Vite
+* Tailwind CSS
+* React Router DOM
+* Axios
+* Framer Motion
+
+### Backend
+
+* Node.js
+* Express.js
+* MongoDB Atlas
+* Mongoose
+
+### Authentication
+
+* JWT (JSON Web Tokens)
+* bcryptjs
+
+### Development Tools
+
+* Git
+* GitHub
+* Nodemon
+* ESLint
+
+---
+
+## 📂 Project Structure
+
+```text
+PrepTrack-AI/
+├── client/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── hooks/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── utils/
+│   └── public/
+│
+├── server/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   └── utils/
+│
+├── package.json
+└── README.md
 ```
 
-Or step by step:
+---
+
+## ⚙️ Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/soum-yaa/PrepTrack-AI.git
+cd PrepTrack-AI
+```
+
+### Install Dependencies
 
 ```bash
 npm install
@@ -25,82 +122,105 @@ npm install --prefix client
 npm install --prefix server
 ```
 
-### 2. Environment variables
+---
 
-**Server** — copy the example file and edit values:
+## 🔐 Environment Variables
 
-```bash
-copy server\.env.example server\.env
+### Server (.env)
+
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+CLIENT_URL=http://localhost:5173
 ```
 
-On macOS/Linux:
+### Client (.env.local)
 
-```bash
-cp server/.env.example server/.env
+```env
+VITE_API_URL=http://localhost:5000
 ```
 
-Set `MONGO_URI`, `JWT_SECRET`, and optionally `PORT`.
+---
 
-Optional: set `CLIENT_URL` to a comma-separated allowlist for browser origins (for example `http://localhost:5173`). When omitted, CORS reflects a permissive development default.
+## ▶️ Run Application
 
-**Client** — copy and set the API base URL (must be prefixed with `VITE_`):
-
-```bash
-copy client\.env.example client\.env.local
-```
-
-Set `VITE_API_URL` (e.g. `http://localhost:5000`).
-
-### 3. Run client and server together
+Run frontend and backend together:
 
 ```bash
 npm run dev
 ```
 
-- Client: Vite dev server (default `http://localhost:5173`)
-- Server: Express (default `http://localhost:5000`)
+Frontend:
 
-### Individual processes
+```text
+http://localhost:5173
+```
+
+Backend:
+
+```text
+http://localhost:5000
+```
+
+Run individually:
 
 ```bash
 npm run client
 npm run server
 ```
 
-## Project structure
+---
 
-```
-mern-ai-platform/
-├── client/          # React + Vite + Tailwind
-├── server/          # Express + Mongoose
-├── package.json     # Root scripts + concurrently
-└── README.md
-```
+## 📌 Current Progress
 
-## API routes (initial)
+### Completed
 
-| Prefix        | Purpose        |
-|---------------|----------------|
-| `/api/auth`   | `POST /register`, `POST /login`, `GET /me` (Bearer) |
-| `/api/tasks`  | `GET /`, `POST /` (Bearer) — tasks scoped to the signed-in user |
-| `/api/users`  | `GET /me` (Bearer) — profile placeholder |
+* Authentication System
+* JWT Authorization
+* MongoDB Atlas Integration
+* Task Management CRUD
+* Responsive Dashboard Layout
+* Protected Routes
+* Dark Mode
 
-Health check (no prefix): `GET /health`.
+### In Development
 
-## Scripts reference
+* Dashboard Analytics
+* Productivity Metrics
+* Placement Tracker
+* Application Tracker
+* AI Resume Analyzer
+* AI Interview Preparation
+* AI Study Planner
 
-| Command            | Description                          |
-|--------------------|--------------------------------------|
-| `npm run dev`      | Run client + server in parallel      |
-| `npm run install:all` | Install root, client, and server deps |
-| `npm run build`    | Production build (client)            |
-| `npm run lint`     | Lint client and server               |
+---
 
-## Tech stack
+## 🎯 Vision
 
-- **Client:** React 19, Vite, Tailwind CSS, React Router, Axios, Framer Motion
-- **Server:** Node.js, Express, Mongoose, JWT utilities, CORS, centralized error handling
+PrepTrack AI aims to become an all-in-one platform for students and professionals by combining:
 
-## License
+* Productivity Management
+* Career Planning
+* Placement Preparation
+* AI-powered Guidance
+* Progress Tracking
 
-MIT (adjust as needed for your product).
+into a single intelligent dashboard.
+
+---
+
+## 👩‍💻 Author
+
+**Soumya Verma**
+
+B.Tech Electronics & Communication Engineering
+MMMUT Gorakhpur
+
+GitHub: https://github.com/soum-yaa
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
