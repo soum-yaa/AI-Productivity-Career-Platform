@@ -7,6 +7,7 @@ import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import Dashboard from './pages/Dashboard.jsx';
+import Tasks from './pages/Tasks.jsx';
 import NotFound from './pages/NotFound.jsx';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/tasks" element={<Tasks />} />
         </Route>
       </Route>
 

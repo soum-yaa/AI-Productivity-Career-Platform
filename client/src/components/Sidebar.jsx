@@ -5,7 +5,7 @@ import { cn } from '../utils/cn.js';
 const primary = { to: '/dashboard', label: 'Overview', icon: '📊', end: true };
 
 const secondary = [
-  { label: 'Tasks', icon: '✅' },
+  { to: '/dashboard/tasks', label: 'Tasks', icon: '✅' },
   { label: 'Career goals', icon: '🚀' },
 ];
 
@@ -32,18 +32,37 @@ export function Sidebar({ open, onClose }) {
           <span aria-hidden>{primary.icon}</span>
           {primary.label}
         </NavLink>
-        {secondary.map((item) => (
-          <button
-            key={item.label}
-            type="button"
-            disabled
-            title="Hook these to nested routes when you add modules"
-            className="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-[var(--color-text-muted)] opacity-60"
-          >
-            <span aria-hidden>{item.icon}</span>
-            {item.label}
-          </button>
-        ))}
+        {secondary.map((item) =>
+          item.to ? (
+            <NavLink
+              key={item.label}
+              to={item.to}
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                  isActive
+                    ? 'bg-[var(--color-primary)]/15 text-[var(--color-primary)]'
+                    : 'text-[var(--color-text-muted)] hover:bg-[var(--color-border)]/50 hover:text-[var(--color-text)]'
+                )
+              }
+              onClick={onClose}
+            >
+              <span aria-hidden>{item.icon}</span>
+              {item.label}
+            </NavLink>
+          ) : (
+            <button
+              key={item.label}
+              type="button"
+              disabled
+              title="Coming soon"
+              className="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium text-[var(--color-text-muted)] opacity-60"
+            >
+              <span aria-hidden>{item.icon}</span>
+              {item.label}
+            </button>
+          )
+        )}
       </nav>
       <div className="mt-auto rounded-lg border border-dashed border-[var(--color-border)] p-3 text-xs text-[var(--color-text-muted)]">
         AI summaries and nudges can live in this panel.
