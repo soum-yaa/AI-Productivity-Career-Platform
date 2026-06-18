@@ -42,7 +42,7 @@ export function Navbar({ showSidebarTrigger = false, onMenuClick }) {
           </button>
         )}
         <Link to="/" className="truncate text-sm font-semibold tracking-tight">
-          Nexus<span className="text-[var(--color-primary)]">AI</span>
+          PrepTrack<span className="text-[var(--color-primary)]">AI</span>
         </Link>
       </div>
 
