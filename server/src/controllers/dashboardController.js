@@ -12,6 +12,18 @@ const getSummary = asyncHandler(async (req, res) => {
   const completionRate =
     totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
+  const statusCounts = [
+    { name: 'Todo', value: pendingTasks },
+    { name: 'In Progress', value: inProgressTasks },
+    { name: 'Completed', value: completedTasks },
+  ];
+
+  const priorityCounts = [
+    { name: 'Low', value: tasks.filter((t) => t.priority === 'Low').length },
+    { name: 'Medium', value: tasks.filter((t) => t.priority === 'Medium').length },
+    { name: 'High', value: tasks.filter((t) => t.priority === 'High').length },
+  ];
+
   const now = new Date();
   now.setHours(0, 0, 0, 0);
 
@@ -30,12 +42,15 @@ const getSummary = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     summary: {
+      userName: req.user.name,
       totalTasks,
       completedTasks,
       pendingTasks,
       inProgressTasks,
       highPriorityTasks,
       completionRate,
+      statusCounts,
+      priorityCounts,
       upcomingDeadlines,
       recentTasks,
     },
