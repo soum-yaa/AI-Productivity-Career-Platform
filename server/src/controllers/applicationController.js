@@ -63,8 +63,46 @@ const deleteApplication = asyncHandler(async (req, res) => {
   res.json({ success: true, message: 'Application deleted' });
 });
 
+const updateApplication = asyncHandler(async (req, res) => {
+  const application = await Application.findOne({
+    _id: req.params.id,
+    createdBy: req.user.id,
+  });
+
+  if (!application) {
+    throw new AppError('Application not found', 404);
+  }
+
+  const { company, role, status, appliedDate, deadline, link, notes } = req.body;
+
+  if (company !== undefined) {
+    if (!company.trim()) throw new AppError('Company is required', 400);
+    application.company = company.trim();
+  }
+
+  if (role !== undefined) {
+    if (!role.trim()) throw new AppError('Role is required', 400);
+    application.role = role.trim();
+  }
+
+  if (status !== undefined) {
+    if (!STATUSES.includes(status)) throw new AppError('Invalid status', 400);
+    application.status = status;
+  }
+
+  if (appliedDate !== undefined) application.appliedDate = appliedDate || null;
+  if (deadline !== undefined) application.deadline = deadline || null;
+  if (link !== undefined) application.link = link;
+  if (notes !== undefined) application.notes = notes;
+
+  await application.save();
+
+  res.json({ success: true, application });
+});
+
 module.exports = {
   listApplications,
   createApplication,
+  updateApplication,
   deleteApplication,
 };
