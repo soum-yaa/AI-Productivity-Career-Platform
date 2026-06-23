@@ -9,6 +9,7 @@ import Signup from './pages/Signup.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Tasks from './pages/Tasks.jsx';
 import NotFound from './pages/NotFound.jsx';
+import Applications from "./pages/Applications";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/tasks" element={<Tasks />} />
+          <Route path="/dashboard/applications" element={<Applications />} />
         </Route>
       </Route>
 
