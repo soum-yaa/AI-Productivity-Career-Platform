@@ -49,6 +49,7 @@ function toInputDate(value) {
 
 function sortTasks(list, sortBy) {
   const sorted = [...list];
+
   if (sortBy === 'dueDate') {
     return sorted.sort((a, b) => {
       if (!a.dueDate && !b.dueDate) return 0;
@@ -57,14 +58,14 @@ function sortTasks(list, sortBy) {
       return new Date(a.dueDate) - new Date(b.dueDate);
     });
   }
+
   if (sortBy === 'priority') {
     return sorted.sort(
       (a, b) => PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]
     );
   }
-  return sorted.sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
+
+  return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 }
 
 function Modal({ title, onClose, children }) {
@@ -81,6 +82,7 @@ function Modal({ title, onClose, children }) {
         aria-label="Close dialog"
         onClick={onClose}
       />
+
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -91,6 +93,7 @@ function Modal({ title, onClose, children }) {
           <h2 id="modal-title" className="text-lg font-semibold">
             {title}
           </h2>
+
           <button
             type="button"
             onClick={onClose}
@@ -100,8 +103,100 @@ function Modal({ title, onClose, children }) {
             ✕
           </button>
         </div>
+
         {children}
       </motion.div>
+    </div>
+  );
+}
+
+function TaskFormFields({ idPrefix = 'task', form, setForm, inputClass, labelClass }) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <div className="sm:col-span-2">
+        <label className={labelClass} htmlFor={`${idPrefix}-title`}>
+          Title
+        </label>
+        <input
+          id={`${idPrefix}-title`}
+          className={inputClass}
+          value={form.title}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, title: e.target.value }))
+          }
+          required
+        />
+      </div>
+
+      <div className="sm:col-span-2">
+        <label className={labelClass} htmlFor={`${idPrefix}-description`}>
+          Description
+        </label>
+        <textarea
+          id={`${idPrefix}-description`}
+          className={`${inputClass} min-h-24 resize-y`}
+          value={form.description}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, description: e.target.value }))
+          }
+          placeholder="Optional details about this task…"
+        />
+      </div>
+
+      <div>
+        <label className={labelClass} htmlFor={`${idPrefix}-priority`}>
+          Priority
+        </label>
+        <select
+          id={`${idPrefix}-priority`}
+          className={inputClass}
+          value={form.priority}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, priority: e.target.value }))
+          }
+        >
+          {PRIORITIES.map((p) => (
+            <option key={p} value={p}>
+              {p}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className={labelClass} htmlFor={`${idPrefix}-status`}>
+          Status
+        </label>
+        <select
+          id={`${idPrefix}-status`}
+          className={inputClass}
+          value={form.status}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, status: e.target.value }))
+          }
+        >
+          {STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="sm:col-span-2">
+        <label className={labelClass} htmlFor={`${idPrefix}-due`}>
+          Due date
+        </label>
+        <input
+          id={`${idPrefix}-due`}
+          type="date"
+          className={inputClass}
+          value={form.dueDate}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, dueDate: e.target.value }))
+          }
+        />
+      </div>
     </div>
   );
 }
@@ -124,10 +219,12 @@ export default function Tasks() {
 
   const inputClass =
     'mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm outline-none ring-[var(--color-primary)] focus:ring-2';
+
   const labelClass = 'text-xs font-medium text-[var(--color-text-muted)]';
 
   const loadTasks = useCallback(async () => {
     setError('');
+
     try {
       const { data } = await api.get('/api/tasks');
       setTasks(data.tasks);
@@ -146,12 +243,14 @@ export default function Tasks() {
 
   const displayedTasks = useMemo(() => {
     const query = search.trim().toLowerCase();
+
     const filtered = tasks.filter((task) => {
       if (query && !task.title.toLowerCase().includes(query)) return false;
       if (statusFilter && task.status !== statusFilter) return false;
       if (priorityFilter && task.priority !== priorityFilter) return false;
       return true;
     });
+
     return sortTasks(filtered, sortBy);
   }, [tasks, search, statusFilter, priorityFilter, sortBy]);
 
@@ -185,6 +284,7 @@ export default function Tasks() {
     e.preventDefault();
     setSubmitting(true);
     setError('');
+
     const payload = {
       title: form.title,
       description: form.description,
@@ -210,6 +310,7 @@ export default function Tasks() {
     e.preventDefault();
     setSubmitting(true);
     setError('');
+
     const payload = {
       title: form.title,
       description: form.description,
@@ -236,10 +337,12 @@ export default function Tasks() {
   async function handleStatusChange(taskId, newStatus) {
     setUpdatingStatusId(taskId);
     setError('');
+
     try {
       const { data } = await api.put(`/api/tasks/${taskId}`, {
         status: newStatus,
       });
+
       setTasks((prev) =>
         prev.map((t) => (t._id === taskId ? data.task : t))
       );
@@ -256,12 +359,16 @@ export default function Tasks() {
 
   async function confirmDelete() {
     if (!deleteTarget) return;
+
     setSubmitting(true);
     setError('');
+
     try {
       await api.delete(`/api/tasks/${deleteTarget._id}`);
       setTasks((prev) => prev.filter((t) => t._id !== deleteTarget._id));
+
       if (editingId === deleteTarget._id) closeEditModal();
+
       setDeleteTarget(null);
     } catch (err) {
       setError(
@@ -270,85 +377,6 @@ export default function Tasks() {
     } finally {
       setSubmitting(false);
     }
-  }
-
-  function TaskFormFields({ idPrefix = 'task' }) {
-    return (
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="sm:col-span-2">
-          <label className={labelClass} htmlFor={`${idPrefix}-title`}>
-            Title
-          </label>
-          <input
-            id={`${idPrefix}-title`}
-            className={inputClass}
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            required
-          />
-        </div>
-        <div className="sm:col-span-2">
-          <label className={labelClass} htmlFor={`${idPrefix}-description`}>
-            Description
-          </label>
-          <textarea
-            id={`${idPrefix}-description`}
-            className={`${inputClass} min-h-24 resize-y`}
-            value={form.description}
-            onChange={(e) =>
-              setForm({ ...form, description: e.target.value })
-            }
-            placeholder="Optional details about this task…"
-          />
-        </div>
-        <div>
-          <label className={labelClass} htmlFor={`${idPrefix}-priority`}>
-            Priority
-          </label>
-          <select
-            id={`${idPrefix}-priority`}
-            className={inputClass}
-            value={form.priority}
-            onChange={(e) => setForm({ ...form, priority: e.target.value })}
-          >
-            {PRIORITIES.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className={labelClass} htmlFor={`${idPrefix}-status`}>
-            Status
-          </label>
-          <select
-            id={`${idPrefix}-status`}
-            className={inputClass}
-            value={form.status}
-            onChange={(e) => setForm({ ...form, status: e.target.value })}
-          >
-            {STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="sm:col-span-2">
-          <label className={labelClass} htmlFor={`${idPrefix}-due`}>
-            Due date
-          </label>
-          <input
-            id={`${idPrefix}-due`}
-            type="date"
-            className={inputClass}
-            value={form.dueDate}
-            onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
-          />
-        </div>
-      </div>
-    );
   }
 
   return (
@@ -364,6 +392,7 @@ export default function Tasks() {
             Create, filter, and manage your work items.
           </p>
         </div>
+
         <button
           type="button"
           onClick={() => {
@@ -396,9 +425,17 @@ export default function Tasks() {
             className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] p-4 shadow-sm sm:p-5"
           >
             <p className="text-sm font-semibold">Create a new task</p>
+
             <div className="mt-4">
-              <TaskFormFields idPrefix="create" />
+              <TaskFormFields
+                idPrefix="create"
+                form={form}
+                setForm={setForm}
+                inputClass={inputClass}
+                labelClass={labelClass}
+              />
             </div>
+
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <button
                 type="submit"
@@ -407,6 +444,7 @@ export default function Tasks() {
               >
                 {submitting ? 'Saving…' : 'Create task'}
               </button>
+
               <button
                 type="button"
                 onClick={resetCreateForm}
@@ -427,6 +465,7 @@ export default function Tasks() {
           onChange={(e) => setSearch(e.target.value)}
           className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-3 py-2 text-sm outline-none ring-[var(--color-primary)] focus:ring-2 sm:col-span-2 lg:col-span-1"
         />
+
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
@@ -439,6 +478,7 @@ export default function Tasks() {
             </option>
           ))}
         </select>
+
         <select
           value={priorityFilter}
           onChange={(e) => setPriorityFilter(e.target.value)}
@@ -451,6 +491,7 @@ export default function Tasks() {
             </option>
           ))}
         </select>
+
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
@@ -485,6 +526,7 @@ export default function Tasks() {
           <p className="mt-2 text-sm text-[var(--color-text-muted)]">
             Create your first task to start tracking your work.
           </p>
+
           <button
             type="button"
             onClick={() => {
@@ -505,6 +547,7 @@ export default function Tasks() {
           <p className="mt-2 text-sm text-[var(--color-text-muted)]">
             Try changing your search or filters.
           </p>
+
           <button
             type="button"
             onClick={() => {
@@ -530,6 +573,7 @@ export default function Tasks() {
                   className="w-1 shrink-0"
                   style={{ backgroundColor: PRIORITY_COLORS[task.priority] }}
                 />
+
                 <div className="flex min-w-0 flex-1 flex-col p-4">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <span
@@ -537,6 +581,7 @@ export default function Tasks() {
                     >
                       {task.priority}
                     </span>
+
                     <select
                       value={task.status}
                       disabled={updatingStatusId === task._id}
@@ -554,7 +599,9 @@ export default function Tasks() {
                     </select>
                   </div>
 
-                  <h2 className="mt-3 line-clamp-2 font-semibold">{task.title}</h2>
+                  <h2 className="mt-3 line-clamp-2 font-semibold">
+                    {task.title}
+                  </h2>
 
                   {task.description && (
                     <p className="mt-2 line-clamp-3 flex-1 text-sm text-[var(--color-text-muted)]">
@@ -577,6 +624,7 @@ export default function Tasks() {
                     >
                       Edit
                     </button>
+
                     <button
                       type="button"
                       onClick={() => setDeleteTarget(task)}
@@ -596,7 +644,14 @@ export default function Tasks() {
         {editModalOpen && (
           <Modal title="Edit task" onClose={closeEditModal}>
             <form onSubmit={handleEdit}>
-              <TaskFormFields idPrefix="edit" />
+              <TaskFormFields
+                idPrefix="edit"
+                form={form}
+                setForm={setForm}
+                inputClass={inputClass}
+                labelClass={labelClass}
+              />
+
               <div className="mt-5 flex flex-col gap-2 sm:flex-row">
                 <button
                   type="submit"
@@ -605,6 +660,7 @@ export default function Tasks() {
                 >
                   {submitting ? 'Saving…' : 'Save changes'}
                 </button>
+
                 <button
                   type="button"
                   onClick={closeEditModal}
@@ -628,6 +684,7 @@ export default function Tasks() {
               </span>
               ? This action cannot be undone.
             </p>
+
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
               <button
                 type="button"
@@ -637,6 +694,7 @@ export default function Tasks() {
               >
                 {submitting ? 'Deleting…' : 'Yes, delete'}
               </button>
+
               <button
                 type="button"
                 onClick={() => setDeleteTarget(null)}
