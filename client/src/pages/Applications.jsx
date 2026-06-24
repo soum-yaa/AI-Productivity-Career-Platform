@@ -29,6 +29,11 @@ function Applications() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const inputClass =
+    "mt-2 rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none";
+
+  const labelClass = "text-sm font-medium text-slate-300";
+
   const fetchApplications = async () => {
     try {
       setLoading(true);
@@ -152,16 +157,19 @@ function Applications() {
           <p className="text-sm text-slate-400">Total Applications</p>
           <h2 className="mt-2 text-3xl font-bold text-white">{stats.total}</h2>
         </div>
+
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <p className="text-sm text-slate-400">Interviews</p>
           <h2 className="mt-2 text-3xl font-bold text-white">
             {stats.interviews}
           </h2>
         </div>
+
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <p className="text-sm text-slate-400">Offers</p>
           <h2 className="mt-2 text-3xl font-bold text-white">{stats.offers}</h2>
         </div>
+
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <p className="text-sm text-slate-400">Rejections</p>
           <h2 className="mt-2 text-3xl font-bold text-white">
@@ -185,64 +193,85 @@ function Applications() {
         )}
 
         <div className="mt-5 grid gap-4 md:grid-cols-2">
-          <input
-            name="company"
-            value={form.company}
-            onChange={handleChange}
-            placeholder="Company"
-            className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none"
-          />
+          <div className="flex flex-col">
+            <label className={labelClass}>Company</label>
+            <input
+              name="company"
+              value={form.company}
+              onChange={handleChange}
+              placeholder="e.g. Amazon"
+              className={inputClass}
+            />
+          </div>
 
-          <input
-            name="role"
-            value={form.role}
-            onChange={handleChange}
-            placeholder="Role"
-            className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none"
-          />
+          <div className="flex flex-col">
+            <label className={labelClass}>Role</label>
+            <input
+              name="role"
+              value={form.role}
+              onChange={handleChange}
+              placeholder="e.g. SDE Intern"
+              className={inputClass}
+            />
+          </div>
 
-          <select
-            name="status"
-            value={form.status}
-            onChange={handleChange}
-            className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none"
-          >
-            {STATUSES.map((status) => (
-              <option key={status}>{status}</option>
-            ))}
-          </select>
+          <div className="flex flex-col">
+            <label className={labelClass}>Application Status</label>
+            <select
+              name="status"
+              value={form.status}
+              onChange={handleChange}
+              className={inputClass}
+            >
+              {STATUSES.map((status) => (
+                <option key={status}>{status}</option>
+              ))}
+            </select>
+          </div>
 
-          <input
-            name="appliedDate"
-            type="date"
-            value={form.appliedDate}
-            onChange={handleChange}
-            className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none"
-          />
+          <div className="flex flex-col">
+            <label className={labelClass}>Applied Date</label>
+            <input
+              name="appliedDate"
+              type="date"
+              value={form.appliedDate}
+              onChange={handleChange}
+              className={inputClass}
+            />
+          </div>
 
-          <input
-            name="deadline"
-            type="date"
-            value={form.deadline}
-            onChange={handleChange}
-            className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none"
-          />
+          <div className="flex flex-col">
+            <label className={labelClass}>Interview / Follow-up Date</label>
+            <input
+              name="deadline"
+              type="date"
+              value={form.deadline}
+              onChange={handleChange}
+              className={inputClass}
+            />
+          </div>
 
-          <input
-            name="link"
-            value={form.link}
-            onChange={handleChange}
-            placeholder="Job link"
-            className="rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none"
-          />
+          <div className="flex flex-col">
+            <label className={labelClass}>Job Link</label>
+            <input
+              name="link"
+              value={form.link}
+              onChange={handleChange}
+              placeholder="Paste job or application link"
+              className={inputClass}
+            />
+          </div>
 
-          <textarea
-            name="notes"
-            value={form.notes}
-            onChange={handleChange}
-            placeholder="Notes"
-            className="md:col-span-2 rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none"
-          />
+          <div className="flex flex-col md:col-span-2">
+            <label className={labelClass}>Notes</label>
+            <textarea
+              name="notes"
+              value={form.notes}
+              onChange={handleChange}
+              placeholder="Add OA details, interview notes, referral info, etc."
+              className={`${inputClass} min-h-24`}
+            />
+          </div>
         </div>
 
         <div className="mt-5 flex gap-3">
@@ -310,15 +339,17 @@ function Applications() {
 
               <div className="mt-4 space-y-1 text-sm text-slate-400">
                 {app.appliedDate && (
+                  <p>Applied: {new Date(app.appliedDate).toLocaleDateString()}</p>
+                )}
+
+                {app.deadline && (
                   <p>
-                    Applied:{" "}
-                    {new Date(app.appliedDate).toLocaleDateString()}
+                    Follow-up: {new Date(app.deadline).toLocaleDateString()}
                   </p>
                 )}
-                {app.deadline && (
-                  <p>Deadline: {new Date(app.deadline).toLocaleDateString()}</p>
-                )}
+
                 {app.notes && <p>Notes: {app.notes}</p>}
+
                 {app.link && (
                   <a
                     href={app.link}
